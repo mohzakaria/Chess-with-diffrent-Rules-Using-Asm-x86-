@@ -629,6 +629,119 @@ CloseFileBP PROC
                 RET
 CloseFileBP ENDP
 
+SELECTEDPIECE PROC
+push bx
+push dx
+
+mov bx,HighlightedBlock1x
+mov dx,HighlightedBlock1Y
+
+cmp bx,orangeBishop1X
+jne comparebishop2
+
+cmp dx, orangeBishop1Y
+jne comparebishop2
+
+call orangeBishopLogic1
+ret
+
+comparebishop2: cmp bx,orangeBishop2X
+jne notorangeBishop
+
+cmp dx, orangeBishop2Y
+jne notorangeBishop
+
+call orangeBishopLogic2
+ret
+
+notorangeBishop:
+
+;;---------------------------------------------------------------------;;
+cmp bx,orangeknight1X
+jne compareknight2
+
+cmp dx, orangeknight1Y
+jne compareknight2
+
+call orangeknightLogic1
+ret
+
+compareknight2: cmp bx,orangeknight2X
+jne notorangeknight
+
+cmp dx, orangeknight2Y
+jne notorangeknight
+
+call orangeknightLogic2
+ret
+
+notorangeknight:
+;;----------------------------------------------------------;;
+cmp bx,orangequeenX
+jne comparequeen2
+
+cmp dx, orangequeenY
+jne comparequeen2
+
+call orangequeenLogic
+ret
+
+comparequeen2: cmp bx,orangequeenX
+jne notorangequeen
+
+cmp dx, orangequeenY
+jne notorangequeen
+
+call orangequeenLogic
+ret
+
+notorangequeen:
+;;------------------------------------------------;;
+cmp bx,orangekingX
+jne compareking2
+
+cmp dx, orangekingY
+jne compareking2
+
+call orangekingLogic
+ret
+
+compareking2: cmp bx,orangekingX
+jne notorangeking
+
+cmp dx, orangekingY
+jne notorangeking
+
+call orangekingLogic
+ret
+
+notorangeking:
+;;-------------------------------------------------------;;
+cmp bx,orangerook1X
+jne comparerook2
+
+cmp dx, orangerook1Y
+jne comparerook2
+
+call orangerookLogic1
+ret
+
+comparerook2: cmp bx,orangerook2X
+jne notorangerook
+
+cmp dx, orangerook2Y
+jne notorangerook
+
+call orangerookLogic2
+ret
+
+notorangerook:
+;;-----------------------------------------------------------;;
+pop dx
+pop bx
+SELECTEDPIECE ENDP
+
+
 moveHighlightedBlock PROC
   AGAIN:
                 MOV  AH , 0
@@ -641,8 +754,11 @@ moveHighlightedBlock PROC
                 je movELEFT1
                 cmp al,73H
                 je moveDOWN1
-                
-                jMP AGAIN
+                cmp al,71h
+                je select
+  Select: call SELECTEDPIECE
+                jmp done
+                jMP Again
 
  moveRIGHT1:
                 ADD  HighlightedBlock1x,30
@@ -665,6 +781,7 @@ moveHighlightedBlock PROC
 
                 RET
 moveHighlightedBlock ENDP
+;;-------------------selected piece----------;;
 
 DRAWBOARD PROC
   ;;---------------printboard----------------------;;
