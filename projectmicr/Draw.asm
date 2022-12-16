@@ -735,7 +735,77 @@ jne notorangerook
 call orangerookLogic2
 ret
 
-notorangerook:
+notorangerook:cmp bx,orangePawn1X
+jne comparePawn2
+
+cmp dx, orangePawn1Y
+jne comparepawn2
+
+call orangePawnLogic1
+ret
+
+comparePawn2: cmp bx,orangePawn2X
+jne comparePawn3
+
+cmp dx, orangeBishop2Y
+jne comparePawn3
+
+call orangePawnLogic2
+ret
+
+comparePawn3: cmp bx,orangePawn3X
+jne comparePawn4
+
+cmp dx, orangePawn3Y
+jne comparepawn4
+
+call orangePawnLogic3
+ret
+
+comparePawn4: cmp bx,orangePawn4X
+jne comparePawn5
+
+cmp dx, orangePawn4Y
+jne comparePawn5
+
+call orangePawnLogic4
+ret
+
+comparePawn5: cmp bx,orangePawn5X
+jne comparePawn6
+
+cmp dx, orangePawn5Y
+jne comparepawn6
+
+call orangePawnLogic5
+ret
+
+comparePawn6: cmp bx,orangePawn6X
+jne comparePawn7
+
+cmp dx, orangepawn6Y
+jne comparePawn7
+
+call orangePawnLogic6
+ret
+comparePawn7: cmp bx,orangePawn7X
+jne comparePawn8
+
+cmp dx, orangePawn7Y
+jne comparepawn8
+
+call orangePawnLogic7
+ret
+
+comparePawn8: cmp bx,orangePawn8X
+jne notorange
+
+cmp dx, orangepawn8Y
+jne notorange
+
+call orangePawnLogic8
+ret
+notorange :
 ;;-----------------------------------------------------------;;
 pop dx
 pop bx
