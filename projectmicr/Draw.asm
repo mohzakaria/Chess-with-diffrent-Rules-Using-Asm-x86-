@@ -1526,7 +1526,7 @@ DRAWBOARD PROC
                 INC  DX
                 CMP  DX ,tempy
                 JNE  drawLooPbp4
-  ;;---------------PRINT blue PAWN5----------------------;;
+   ;;---------------PRINT blue PAWN5----------------------;;
 
                 CALL OpenFilebP
                 CALL ReadDatabP
@@ -1546,7 +1546,10 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp5:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent28
                 INT  10h
+  transparent28:
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1576,7 +1579,10 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp6:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent29
                 INT  10h
+                transparent29:
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1606,7 +1612,10 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp7:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent30
                 INT  10h
+  transparent30:
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1636,7 +1645,10 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp8:  
                 MOV  AL,[BX]
+             cmp  al,0fh
+                je   transparent31
                 INT  10h
+  transparent31:
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1646,8 +1658,6 @@ DRAWBOARD PROC
                 INC  DX
                 CMP  DX ,tempy
                 JNE  drawLooPbp8
-              
-
     
 
 
