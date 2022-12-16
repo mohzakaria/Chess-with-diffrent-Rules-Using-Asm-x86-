@@ -179,7 +179,10 @@
   bluePawn8X        DW  210D
   bluePawn8Y        DW  150D
   ;;------------------------------;;
+  HighlightedBlock1x DW 00D
+  HighlightedBlock1Y DW 00D
 
+;;-----------------------------------;;
   tempx             DW  ?
   tempy             dw  ?
 .Code
@@ -626,14 +629,42 @@ CloseFileBP PROC
                 RET
 CloseFileBP ENDP
 
-Move PROC
-                ADD  orangePAWN1X,0
-                ADD  orangePAWN1Y,25
+moveHighlightedBlock PROC
+  AGAIN:
                 MOV  AH , 0
                 INT  16h
+                cmp al,64H
+                je moveRIGHT1
+                cmp al,77H
+                je moveUP1
+                cmp al,61H
+                je movELEFT1
+                cmp al,73H
+                je moveDOWN1
+                
+                jMP AGAIN
+
+ moveRIGHT1:
+                ADD  HighlightedBlock1x,30
+                ADD  HighlightedBlock1Y,0
+                JMP DONE
+ movEUP1:
+                ADD  HighlightedBlock1x,0
+                sub  HighlightedBlock1Y,25
+                JMP DONE
+ moveLEFT1:
+                sub  HighlightedBlock1x,30
+                ADD  HighlightedBlock1Y,0
+                JMP DONE
+  moveDOWN1:
+                ADD  HighlightedBlock1x,0
+                ADD  HighlightedBlock1Y,25
+                JMP DONE
+                done:
+
 
                 RET
-Move ENDP
+moveHighlightedBlock ENDP
 
 DRAWBOARD PROC
   ;;---------------printboard----------------------;;
@@ -663,6 +694,35 @@ DRAWBOARD PROC
                 INC  DX
                 CMP  DX , BoardHeight
                 JNE  drawLoop
+  ;;---------------------highlighted Tile------------;; 
+               MOV  CX,HighlightedBlock1x
+                MOV  DX,HighlightedBlock1Y
+                mov  es,HighlightedBlock1x
+                mov  tempx,es
+                mov  es,HighlightedBlock1y
+                mov  tempy,es
+                add  tempx,30
+                add  tempy,25
+                MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPHB1:  
+                MOV  AL,13
+                INT  10h
+                INC  CX
+                INC  BX
+                CMP  CX,tempx
+                JNE  drawLoopHB1
+	
+                MOV  CX , HighlightedBlock1x
+                INC  DX
+                CMP  DX , tempy
+                JNE  drawLooPHB1
+
+
+
+
+
   ;;-------------------PRINTBLUEROOK1-------------------;;
                 CALL OpenFileBR
                 CALL ReadDataBR
@@ -681,9 +741,9 @@ DRAWBOARD PROC
   drawLooPBR1:  
                 MOV  AL,[BX]
                 cmp  al,0fh
-                je   transparent_1
+                je   transparent40
                 INT  10h
-  transparent_1:  
+  transparent40:  
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1715,10 +1775,11 @@ DRAWBOARD PROC
                 CMP  DX ,tempy
                 JNE  drawLooPbp8
     
-
-
-                call Move
+ ;;------------------------------------------------------------;;
+                call moveHighlightedBlock
                 jmp  FOFA
+                
+                
              	
   ; Press any key to exit
                 MOV  AH , 0
@@ -1747,6 +1808,7 @@ MAIN PROC FAR
                 MOV  DS , AX
 
                 CALL DRAWBOARD
+
                 
 
 MAIN ENDP
