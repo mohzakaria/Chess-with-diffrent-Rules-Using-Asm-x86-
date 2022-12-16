@@ -679,7 +679,10 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPBR1:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent_1
                 INT  10h
+  transparent_1:  
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1156,7 +1159,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPBR2:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent15
                 INT  10h
+  transparent15:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1183,7 +1190,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPBB2:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent16
                 INT  10h
+  transparent16:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1213,7 +1224,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPBKn1: 
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent17
                 INT  10h
+  transparent17:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1245,7 +1260,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp2:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent18
                 INT  10h
+  transparent18:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1275,7 +1294,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp3:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent19
                 INT  10h
+  transparent19:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1305,7 +1328,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp4:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent20
                 INT  10h
+  transparent20:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1335,7 +1362,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp5:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent21
                 INT  10h
+  transparent21:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1365,7 +1396,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp6:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent22
                 INT  10h
+  transparent22:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1395,7 +1430,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp7:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent23
                 INT  10h
+  transparent23:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1425,7 +1464,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPOp8:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent24
                 INT  10h
+  transparent24:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1456,7 +1499,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp2:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent25
                 INT  10h
+  transparent25:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1486,7 +1533,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp3:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent26
                 INT  10h
+  transparent26:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
@@ -1516,7 +1567,11 @@ DRAWBOARD PROC
   ; Drawing loop
   drawLooPbp4:  
                 MOV  AL,[BX]
+                cmp  al,0fh
+                je   transparent27
                 INT  10h
+  transparent27:  
+               
                 INC  CX
                 INC  BX
                 CMP  CX,tempx
