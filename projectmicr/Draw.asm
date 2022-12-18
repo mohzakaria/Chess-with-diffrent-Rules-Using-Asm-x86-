@@ -1,4 +1,7 @@
 
+
+
+
 .Model Medium
 .386
 .Stack 256
@@ -188,6 +191,8 @@
 ;;-----------------------------------;;
   tempx             DW  ?
   tempy             dw  ?
+  BLOCKX            DW ?
+  BLOCKY            DW ?
 .Code
   ;;-----------BOARD FILE--------;;
 
@@ -891,1137 +896,1344 @@ moveHighlightedBlock PROC
 
                 RET
 moveHighlightedBlock ENDP
-;;-------------------selected piece----------;;
+
+;-------------------------------------------;
+DRAWBLACKBLOCK PROC
+                       MOV  CX,BLOCKX
+                       MOV  DX,BLOCKY
+                       mov  es,BLOCKX
+                       mov  tempx,es
+                       mov  es,BLOCKY
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBB:         
+                       MOV  AL,13
+                       INT  10h
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLooPBB
+	
+                       MOV  CX , BLOCKX
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBB
+DRAWBLACKBLOCK ENDP  
+DRAWWHITEBLOCK PROC
+                       MOV  CX,BLOCKX
+                       MOV  DX,BLOCKY
+                       mov  es,BLOCKX
+                       mov  tempx,es
+                       mov  es,BLOCKY
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPWB:         
+                       MOV  AL,13
+                       INT  10h
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLooPWB
+	
+                       MOV  CX , BLOCKX
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPWB
+DRAWWHITEBLOCK ENDP 
+;-------------------------------------------------;
+
+;PRINTING EACH PIECE
+ PRINTBLUEROOK1 PROC
+
+  ;;-------------------PRINTBLUEROOK1-------------------;;
+                       CALL OpenFileBR
+                       CALL ReadDataBR
+                       LEA  BX ,BROOKData
+                       MOV  CX,blueRook1X
+                       MOV  DX,blueRook1y
+                       mov  es,blueRook1X
+                       mov  tempx,es
+                       mov  es,BlueRook1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBR1:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent40
+                       INT  10h
+  transparent40:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBR1
+	
+                       MOV  CX , blueRook1X
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBR1
+                       RET
+PRINTBLUEROOK1 ENDP
+  ;-------------------------------;
+ PRINTbluePAWN1 PROC
+                       CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn1X
+                       MOV  DX,bluePawn1y
+                
+                       mov  es,bluePawn1X
+                       mov  tempx,es
+                       mov  es,bluePawn1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp1:         
+    
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent
+                       INT  10h
+  transparent:         
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp1
+	
+                       MOV  CX , bluePawn1X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp1
+                       RET
+
+
+PRINTbluePAWN1 ENDP
+  ;-------------------------------;
+ PRINTORANGEPAWN1 PROC
+                       CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn1X
+                       MOV  DX,orangePawn1y
+                
+                       mov  es,orangePawn1X
+                       mov  tempx,es
+                       mov  es,orangePawn1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+
+  ; Drawing loop
+  drawLooPOp1:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent1
+                       INT  10h
+  transparent1:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp1
+	
+                       MOV  CX , orangepawn1X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp1
+                       RET
+PRINTORANGEPAWN1 ENDP
+  ;-------------------------------;
+ PRINTORANGEROOK1 PROC
+                       CALL OpenFileOR
+                       CALL ReadDataOR
+                       LEA  BX , OROOKData
+                       MOV  CX,orangeRook1X
+                       MOV  DX,orangeRook1y
+                       mov  es,orangeRook1X
+                       mov  tempx,es
+                       mov  es,orangeRook1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOR1:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent2
+                       INT  10h
+  transparent2:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOR1
+	
+                       MOV  CX , orangeRook1X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOR1
+                       RET
+PRINTORANGEROOK1 ENDP
+  ;-------------------------------;
+ PRINTORANGEBISHOP1 PROC
+                       CALL OpenFileOB
+                       CALL ReadDataOB
+                       LEA  BX , OBISHOPData
+                       MOV  CX,orangebishop1X
+                       MOV  DX,orangebishop1y
+                       mov  es,orangebishop1X
+                       mov  tempx,es
+                       mov  es,orangeBishop1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOB1:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent3
+                       INT  10h
+  transparent3:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOB1
+	
+                       MOV  CX , orangeBishop1X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOB1
+                       RET
+PRINTORANGEBISHOP1 ENDP
+  ;----------------------------------;
+ PRINTORANGEBISHOP2 proc
+                       CALL OpenFileOB
+                       CALL ReadDataOB
+                       LEA  BX , OBISHOPData
+                       MOV  CX,orangebishop2X
+                       MOV  DX,orangebishop2y
+                       mov  es,orangebishop2X
+                       mov  tempx,es
+                       mov  es,orangeBishop2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOB2:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent5
+                       INT  10h
+  transparent5:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOB2
+	
+                       MOV  CX , orangeBishop2X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOB2
+                       RET
+PRINTORANGEBISHOP2 ENDP
+  ;--------------------------------;
+ PRINTORANGEROOK2 PROC
+
+
+                       CALL OpenFileOR
+                       CALL ReadDataOR
+                       LEA  BX , OROOKData
+                       MOV  CX,orangeRook2X
+                       MOV  DX,orangeRook2y
+                
+                       mov  es,orangeRook2X
+                       mov  tempx,es
+                       mov  es,orangeRook2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOR2:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent6
+                       INT  10h
+  transparent6:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOR2
+	
+                       MOV  CX , orangeRook2X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOR2
+                       RET
+
+PRINTORANGEROOK2 ENDP
+  ;--------------------------------;
+ PRINTORANGEQUEEN PROC
+                       CALL OpenFileOQ
+                       CALL ReadDataOQ
+                       LEA  BX , OQUEENData
+                       MOV  CX,orangeQUEENX
+                       MOV  DX,orangeQUEENy
+                
+                       mov  es,orangeQUEENX
+                       mov  tempx,es
+                       mov  es,orangeQUEENY
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOq:          
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent7
+                       INT  10h
+  transparent7:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOQ
+	
+                       MOV  CX , orangeQUEENX
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOq
+                       RET
+PRINTORANGEQUEEN ENDP
+  ;--------------------------------;
+ PRINTORANGEKING PROC
+                       CALL OpenFileOK
+                       CALL ReadDataOK
+                       LEA  BX , OKINGData
+                       MOV  CX,orangeKINGX
+                       MOV  DX,orangeKINGy
+                
+                       mov  es,orangeKINGX
+                       mov  tempx,es
+                       mov  es,orangeKINGY
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOk:          
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent8
+                       INT  10h
+  transparent8:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOk
+	
+                       MOV  CX , orangeKingX
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOk
+                       RET
+
+PRINTORANGEKING ENDP
+  ;----------------------------------;
+ PRINTBLUEKnight2 PROC
+                       CALL OpenFileBKn
+                       CALL ReadDataBKn
+                       LEA  BX ,BKNIGHTData
+                       MOV  CX,blueKnight2X
+                       MOV  DX,blueKnight2y
+                       mov  es,blueKnight2X
+                       mov  tempx,es
+                       mov  es,BlueKnight2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBKn2:        
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent9
+                       INT  10h
+  transparent9:        
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBKn2
+	
+                       MOV  CX , blueKnight2X
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBKn2
+                       RET
+
+PRINTBLUEKnight2 ENDP
+  ;-----------------------------------;
+ PRINTBLUEKing PROC
+
+                       CALL OpenFileBK
+                       CALL ReadDataBK
+                       LEA  BX ,BKINGData
+                       MOV  CX,blueKingX
+                       MOV  DX,blueKingy
+                       mov  es,blueKINGX
+                       mov  tempx,es
+                       mov  es,BlueKINGY
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBk:          
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent10
+                       INT  10h
+  transparent10:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBK
+	
+                       MOV  CX , blueKingX
+                       INC  DX
+                       CMP  DX , TEMPY
+                       JNE  drawLooPBK
+                       RET
+
+PRINTBLUEKing ENDP
+  ;-----------------------------------;
+ PRINTBLUEQUEEN PROC
+
+                       CALL OpenFileBQ
+                       CALL ReadDataBQ
+                       LEA  BX ,BQUEENData
+                       MOV  CX,blueQueenX
+                       MOV  DX,blueQueeny
+                       mov  es,blueQUEENX
+                       mov  tempx,es
+                       mov  es,BlueQUEENY
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBQ:          
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent11
+                       INT  10h
+  transparent11:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,TEMPX
+                       JNE  drawLoopBQ
+	
+                       MOV  CX , blueQueenX
+                       INC  DX
+                       CMP  DX , TEMPY
+                       JNE  drawLooPBQ
+                       RET
+
+PRINTBLUEQUEEN ENDP
+ ;--------------------------------------;
+ PRINTBLUEBISHOP1 PROC
+                       CALL OpenFileBB
+                       CALL ReadDataBB
+                       LEA  BX ,BBISHOPData
+                       MOV  CX,blueBishop1X
+                       MOV  DX,blueBishop1y
+                       mov  es,blueBishop1X
+                       mov  tempx,es
+                       mov  es,BlueBishop1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBB1:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent12
+                       INT  10h
+  transparent12:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBB1
+	
+                       MOV  CX , blueBishop1X
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBB1
+ RET
+ PRINTBLUEBISHOP1 ENDP
+ ;---------------------------------------;
+ PRINTORANGEKNIGHT1 PROC
+                       CALL OpenFileOKN
+                       CALL ReadDataOKN
+                       LEA  BX , OKNIGHTData
+                       MOV  CX,orangeKnight1X
+                       MOV  DX,orangeKNIGHT1y
+                
+                       mov  es,orangeKNIGHT1X
+                       mov  tempx,es
+                       mov  es,orangeKNIGHT1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOkn1:        
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent13
+                       INT  10h
+  transparent13:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOkn1
+	
+                       MOV  CX , orangeKnight1X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOkn1
+
+PRINTORANGEKNIGHT1 ENDP  
+ ;------------------------------------;
+ PRINTORANGEKNIGHT2 PROC
+
+ CALL OpenFileOKN
+                       CALL ReadDataOKN
+                       LEA  BX , OKNIGHTData
+                       MOV  CX,orangeKnight2X
+                       MOV  DX,orangeKNIGHT2y
+                
+                       mov  es,orangeKNIGHT2X
+                       mov  tempx,es
+                       mov  es,orangeKNIGHT2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOkn2:        
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent14
+                       INT  10h
+  transparent14:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOkn2
+	
+                       MOV  CX , orangeKnight2X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOkn2
+                       RET
+PRINTORANGEKNIGHT2 ENDP  
+ ;------------------------------------;
+ PRINTBLUEROOK2 proc
+
+ CALL OpenFileBR
+                       CALL ReadDataBR
+                       LEA  BX ,BROOKData
+                       MOV  CX,blueRook2X
+                       MOV  DX,blueRook2y
+                       mov  es,blueRook2X
+                       mov  tempx,es
+                       mov  es,BlueRook2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBR2:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent15
+                       INT  10h
+  transparent15:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBR2
+	
+                       MOV  CX , blueRook2X
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBR2
+                       RET
+
+
+PRINTBLUEROOK2 ENDP
+ ;-------------------------------------;
+ PRINTBLUEBISHOP2 PROC
+ CALL OpenFileBB
+                       CALL ReadDataBB
+                       LEA  BX ,BBISHOPData
+                       MOV  CX,blueBishop2X
+                       MOV  DX,blueBishop2y
+                       mov  es,blueBishop2X
+                       mov  tempx,es
+                       mov  es,BlueBishop2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBB2:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent16
+                       INT  10h
+  transparent16:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBB2
+	
+                       MOV  CX , blueBishop2X
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBB2
+ RET
+
+
+PRINTBLUEBISHOP2 ENDP  
+ ;--------------------------------------;
+ PRINTBLUEKnight1 PROC
+
+  CALL OpenFileBKn
+                       CALL ReadDataBKn
+                       LEA  BX ,BKNIGHTData
+                       MOV  CX,blueKnight1X
+                       MOV  DX,blueKnight1y
+                       mov  es,blueKnight1X
+                       mov  tempx,es
+                       mov  es,BlueKnight1Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPBKn1:        
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent17
+                       INT  10h
+  transparent17:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopBKn1
+	
+                       MOV  CX , blueKnight1X
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPBKn1
+
+ RET
+
+PRINTBLUEKnight1 ENDP 
+ ;----------------------------------------;
+ PRINTORANGEPAWN2 PROC
+
+    CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn2X
+                       MOV  DX,orangePawn2y
+                
+                       mov  es,orangePawn2X
+                       mov  tempx,es
+                       mov  es,orangePawn2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp2:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent18
+                       INT  10h
+  transparent18:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp2
+	
+                       MOV  CX , orangePawn2X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp2
+                       RET
+
+PRINTORANGEPAWN2 ENDP  
+ ;---------------------------------------;
+
+ PRINTORANGEPAWN3 PROC
+                    CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn3X
+                       MOV  DX,orangePawn3y
+                
+                       mov  es,orangePawn3X
+                       mov  tempx,es
+                       mov  es,orangePawn3Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp3:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent19
+                       INT  10h
+  transparent19:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp3
+	
+                       MOV  CX , orangepawn3X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp3
+  RET
+
+PRINTORANGEPAWN3 ENDP
+
+ ;-------------------------------------;
+ PRINTORANGEPAWN4 PROC
+  
+                       CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn4X
+                       MOV  DX,orangePawn4y
+                
+                       mov  es,orangePawn4X
+                       mov  tempx,es
+                       mov  es,orangePawn4Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp4:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent20
+                       INT  10h
+  transparent20:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp4
+	
+                       MOV  CX , orangePawn4X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp4
+                       RET
+
+PRINTORANGEPAWN4 ENDP  
+
+ ;---------------------------------------;
+ PRINTORANGEPAWN5 PROC
+                   CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn5X
+                       MOV  DX,orangePawn5y
+                
+                       mov  es,orangePawn5X
+                       mov  tempx,es
+                       mov  es,orangePawn5Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp5:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent21
+                       INT  10h
+  transparent21:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLooPOp5
+	
+                       MOV  CX , orangepawn5X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp5
+ RET
+PRINTORANGEPAWN5 ENDP
+ ;----------------------------------------;
+ PRINTORANGEPAWN6 PROC
+                       CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn6X
+                       MOV  DX,orangePawn6y
+                
+                       mov  es,orangePawn6X
+                       mov  tempx,es
+                       mov  es,orangePawn6Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp6:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent22
+                       INT  10h
+  transparent22:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp6
+	
+                       MOV  CX , orangePawn6X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp6
+                       RET
+
+
+
+PRINTORANGEPAWN6 ENDP
+ ;--------------------------------------------;
+ PRINTORANGEPAWN7 PROC
+ 
+                       CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn7X
+                       MOV  DX,orangePawn7y
+                
+                       mov  es,orangePawn7X
+                       mov  tempx,es
+                       mov  es,orangePawn7Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp7:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent23
+                       INT  10h
+  transparent23:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp7
+	
+                       MOV  CX , orangepawn7X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp7
+                       RET
+
+
+PRINTORANGEPAWN7 ENDP
+ ;-------------------------------------------------;
+ PRINTORANGEPAWN8 PROC
+ 
+                       CALL OpenFileOP
+                       CALL ReadDataOP
+                       LEA  BX , OPAWNData
+                       MOV  CX,orangePawn8X
+                       MOV  DX,orangePawn8y
+                
+                       mov  es,orangePawn8X
+                       mov  tempx,es
+                       mov  es,orangePawn8Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPOp8:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent24
+                       INT  10h
+  transparent24:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopOp8
+	
+                       MOV  CX , orangePawn8X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPOp8
+                       RET
+
+
+
+PRINTORANGEPAWN8 ENDP
+
+ ;------------------------------------------------------;
+ PRINTBLUEPAWN2 PROC
+
+   CALL OpenFileBP
+                       CALL ReadDataBP
+                       LEA  BX , BPAWNData
+                       MOV  CX,BLUEPawn2X
+                       MOV  DX,bluePawn2y
+                
+                       mov  es,bluePawn2X
+                       mov  tempx,es
+                       mov  es,bluePawn2Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp2:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent25
+                       INT  10h
+  transparent25:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp2
+	
+                       MOV  CX , bluePawn2X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp2
+ RET
+
+
+PRINTBLUEPAWN2 ENDP  
+ ;----------------------------------------------------------;
+ PRINTBLUEPAWN3 PROC
+
+                       CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn3X
+                       MOV  DX,bluePawn3y
+                
+                       mov  es,bluePawn3X
+                       mov  tempx,es
+                       mov  es,bluePawn3Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp3:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent26
+                       INT  10h
+  transparent26:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp3
+	
+                       MOV  CX , bluepawn3X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp3
+                       RET
+
+
+PRINTBLUEPAWN3 ENDP  
+ ;----------------------------------------------------------;
+ PRINTBLUEPAWN4 PROC
+
+                       CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn4X
+                       MOV  DX,bluePawn4y
+                
+                       mov  es,bluePawn4X
+                       mov  tempx,es
+                       mov  es,bluePawn4Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp4:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent27
+                       INT  10h
+  transparent27:       
+               
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp4
+	
+                       MOV  CX , bluePawn4X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp4
+                       RET
+
+
+PRINTBLUEPAWN4 ENDP
+ ;----------------------------------------------------------;
+ PRINTBLUEPAWN5 PROC
+                     CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn5X
+                       MOV  DX,bluePawn5y
+                
+                       mov  es,bluePawn5X
+                       mov  tempx,es
+                       mov  es,bluePawn5Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp5:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent28
+                       INT  10h
+  transparent28:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLooPbp5
+	
+                       MOV  CX , bluepawn5X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp5
+                       RET
+
+
+PRINTBLUEPAWN5 ENDP
+ ;----------------------------------------------------------;
+ PRINTBLUEPAWN6 PROC
+              CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn6X
+                       MOV  DX,bluePawn6y
+                
+                       mov  es,bluePawn6X
+                       mov  tempx,es
+                       mov  es,bluePawn6Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp6:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent29
+                       INT  10h
+  transparent29:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp6
+	
+                       MOV  CX , bluePawn6X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp6
+                       RET
+
+
+PRINTBLUEPAWN6 ENDP
+ ;----------------------------------------------------------;
+ PRINTBLUEPAWN7 PROC
+              CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn7X
+                       MOV  DX,bluePawn7y
+                
+                       mov  es,bluePawn7X
+                       mov  tempx,es
+                       mov  es,bluePawn7Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp7:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent30
+                       INT  10h
+  transparent30:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp7
+	
+                       MOV  CX , bluepawn7X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp7
+                       RET
+
+
+PRINTBLUEPAWN7 ENDP
+ ;----------------------------------------------------------;
+ PRINTBLUEPAWN8 PROC
+
+                   CALL OpenFilebP
+                       CALL ReadDatabP
+                       LEA  BX , bPAWNData
+                       MOV  CX,bluePawn8X
+                       MOV  DX,bluePawn8y
+                
+                       mov  es,bluePawn8X
+                       mov  tempx,es
+                       mov  es,bluePawn8Y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+
+                       MOV  AH,0ch
+	
+  ; Drawing loop
+  drawLooPbp8:         
+                       MOV  AL,[BX]
+                       cmp  al,0fh
+                       je   transparent31
+                       INT  10h
+  transparent31:       
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopbp8
+	
+                       MOV  CX , bluePawn8X
+                       INC  DX
+                       CMP  DX ,tempy
+                       JNE  drawLooPbp8
+                       RET
+
+PRINTBLUEPAWN8 ENDP
+ ;---------------------------------------------------------------;
+;------------------------------------------------------------------------;;
+
+
 
 DRAWBOARD PROC
   ;;---------------printboard----------------------;;
-                MOV  AH, 0
-                MOV  AL, 13h
-                INT  10h
-  FOFA:         
-                CALL OpenFile
-                CALL ReadData
+                       MOV  AH, 0
+                       MOV  AL, 13h
+                       INT  10h
+       LOOP1:         
+                       CALL OpenFile
+                       CALL ReadData
 	
-                LEA  BX , BoardData
+                       LEA  BX , BoardData
 	
-                MOV  CX,0
-                MOV  DX,0
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLoop:     
-                MOV  AL,[BX]
-                INT  10h
-                INC  CX
-                INC  BX
-                CMP  CX,BoardWidth
-                JNE  drawLoop
-	
-                MOV  CX ,0
-                INC  DX
-                CMP  DX , BoardHeight
-                JNE  drawLoop
-  ;;---------------------highlighted Tile------------;; 
-               MOV  CX,HighlightedBlock1x
-                MOV  DX,HighlightedBlock1Y
-                mov  es,HighlightedBlock1x
-                mov  tempx,es
-                mov  es,HighlightedBlock1y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
+                       MOV  CX,0
+                       MOV  DX,0
+                       MOV  AH,0ch
 	
   ; Drawing loop
-  drawLooPHB1:  
-                MOV  AL,13
-                INT  10h
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopHB1
-	
-                MOV  CX , HighlightedBlock1x
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPHB1
-
-
-
-
-
-  ;;-------------------PRINTBLUEROOK1-------------------;;
-                CALL OpenFileBR
-                CALL ReadDataBR
-                LEA  BX ,BROOKData
-                MOV  CX,blueRook1X
-                MOV  DX,blueRook1y
-                mov  es,blueRook1X
-                mov  tempx,es
-                mov  es,BlueRook1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBR1:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent40
-                INT  10h
-  transparent40:  
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBR1
-	
-                MOV  CX , blueRook1X
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPBR1
-
-  ;;---------------PRINT blue PAWN1----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn1X
-                MOV  DX,bluePawn1y
-                
-                mov  es,bluePawn1X
-                mov  tempx,es
-                mov  es,bluePawn1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp1:  
-    
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent
-                INT  10h
-  transparent:  
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp1
-	
-                MOV  CX , bluePawn1X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp1
-
-  ;;---------------PRINT ORANGE PAWN1----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn1X
-                MOV  DX,orangePawn1y
-                
-                mov  es,orangePawn1X
-                mov  tempx,es
-                mov  es,orangePawn1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-
-  ; Drawing loop
-  drawLooPOp1:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent1
-                INT  10h
-  transparent1: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp1
-	
-                MOV  CX , orangepawn1X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp1
-
-    
-
-  ;;---------------PRINT ORANGE ROOK1----------------------;;
-
-                CALL OpenFileOR
-                CALL ReadDataOR
-                LEA  BX , OROOKData
-                MOV  CX,orangeRook1X
-                MOV  DX,orangeRook1y
-                mov  es,orangeRook1X
-                mov  tempx,es
-                mov  es,orangeRook1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOR1:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent2
-                INT  10h
-  transparent2: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOR1
-	
-                MOV  CX , orangeRook1X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOR1
-  ;;---------------PRINT ORANGE BISHOP1----------------------;;
-
-                CALL OpenFileOB
-                CALL ReadDataOB
-                LEA  BX , OBISHOPData
-                MOV  CX,orangebishop1X
-                MOV  DX,orangebishop1y
-                mov  es,orangebishop1X
-                mov  tempx,es
-                mov  es,orangeBishop1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOB1:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent3
-                INT  10h
-  transparent3: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOB1
-	
-                MOV  CX , orangeBishop1X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOB1
-  ;;---------------PRINT ORANGE BISHOP2----------------------;;
-                CALL OpenFileOB
-                CALL ReadDataOB
-                LEA  BX , OBISHOPData
-                MOV  CX,orangebishop2X
-                MOV  DX,orangebishop2y
-                mov  es,orangebishop2X
-                mov  tempx,es
-                mov  es,orangeBishop2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOB2:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent5
-                INT  10h
-  transparent5: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOB2
-	
-                MOV  CX , orangeBishop2X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOB2
-  ;;---------------PRINT ORANGE ROOK2----------------------;;
-
-                CALL OpenFileOR
-                CALL ReadDataOR
-                LEA  BX , OROOKData
-                MOV  CX,orangeRook2X
-                MOV  DX,orangeRook2y
-                
-                mov  es,orangeRook2X
-                mov  tempx,es
-                mov  es,orangeRook2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOR2:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent6
-                INT  10h
-  transparent6: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOR2
-	
-                MOV  CX , orangeRook2X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOR2
-
-  ;;---------------PRINT ORANGE QUEEN----------------------;;
-                CALL OpenFileOQ
-                CALL ReadDataOQ
-                LEA  BX , OQUEENData
-                MOV  CX,orangeQUEENX
-                MOV  DX,orangeQUEENy
-                
-                mov  es,orangeQUEENX
-                mov  tempx,es
-                mov  es,orangeQUEENY
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOq:   
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent7
-                INT  10h
-  transparent7: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOQ
-	
-                MOV  CX , orangeQUEENX
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOq
-  ;;---------------PRINT ORANGE KING----------------------;;
-                CALL OpenFileOK
-                CALL ReadDataOK
-                LEA  BX , OKINGData
-                MOV  CX,orangeKINGX
-                MOV  DX,orangeKINGy
-                
-                mov  es,orangeKINGX
-                mov  tempx,es
-                mov  es,orangeKINGY
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOk:   
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent8
-                INT  10h
-  transparent8: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOk
-	
-                MOV  CX , orangeKingX
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOk
-  ;;-------------------PRINTBLUEKnight2-------------------;;
-                CALL OpenFileBKn
-                CALL ReadDataBKn
-                LEA  BX ,BKNIGHTData
-                MOV  CX,blueKnight2X
-                MOV  DX,blueKnight2y
-                mov  es,blueKnight2X
-                mov  tempx,es
-                mov  es,BlueKnight2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBKn2: 
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent9
-                INT  10h
-  transparent9: 
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBKn2
-	
-                MOV  CX , blueKnight2X
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPBKn2
-  ;;-------------------PRINTBLUEKing-------------------;;
-                CALL OpenFileBK
-                CALL ReadDataBK
-                LEA  BX ,BKINGData
-                MOV  CX,blueKingX
-                MOV  DX,blueKingy
-                mov  es,blueKINGX
-                mov  tempx,es
-                mov  es,BlueKINGY
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBk:   
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent10
-                INT  10h
-  transparent10:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBK
-	
-                MOV  CX , blueKingX
-                INC  DX
-                CMP  DX , TEMPY
-                JNE  drawLooPBK
-  ;;-------------------PRINTBLUEQUEEN-------------------;;
-                CALL OpenFileBQ
-                CALL ReadDataBQ
-                LEA  BX ,BQUEENData
-                MOV  CX,blueQueenX
-                MOV  DX,blueQueeny
-                mov  es,blueQUEENX
-                mov  tempx,es
-                mov  es,BlueQUEENY
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBQ:   
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent11
-                INT  10h
-  transparent11:
-                INC  CX
-                INC  BX
-                CMP  CX,TEMPX
-                JNE  drawLoopBQ
-	
-                MOV  CX , blueQueenX
-                INC  DX
-                CMP  DX , TEMPY
-                JNE  drawLooPBQ
-  ;;-------------------PRINTBLUEBISHOP1-------------------;;
-                CALL OpenFileBB
-                CALL ReadDataBB
-                LEA  BX ,BBISHOPData
-                MOV  CX,blueBishop1X
-                MOV  DX,blueBishop1y
-                mov  es,blueBishop1X
-                mov  tempx,es
-                mov  es,BlueBishop1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBB1:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent12
-                INT  10h
-  transparent12:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBB1
-	
-                MOV  CX , blueBishop1X
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPBB1
-
-
-  ;;---------------PRINT ORANGE KNIGHT1----------------------;;
-                CALL OpenFileOKN
-                CALL ReadDataOKN
-                LEA  BX , OKNIGHTData
-                MOV  CX,orangeKnight1X
-                MOV  DX,orangeKNIGHT1y
-                
-                mov  es,orangeKNIGHT1X
-                mov  tempx,es
-                mov  es,orangeKNIGHT1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOkn1: 
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent13
-                INT  10h
-  transparent13:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOkn1
-	
-                MOV  CX , orangeKnight1X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOkn1
-  ;;---------------PRINT ORANGE KNIGHT2----------------------;;
-                CALL OpenFileOKN
-                CALL ReadDataOKN
-                LEA  BX , OKNIGHTData
-                MOV  CX,orangeKnight2X
-                MOV  DX,orangeKNIGHT2y
-                
-                mov  es,orangeKNIGHT2X
-                mov  tempx,es
-                mov  es,orangeKNIGHT2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOkn2: 
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent14
-                INT  10h
-  transparent14:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOkn2
-	
-                MOV  CX , orangeKnight2X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOkn2
  
-  ;;-------------------PRINTBLUEROOK2-------------------;;
-                CALL OpenFileBR
-                CALL ReadDataBR
-                LEA  BX ,BROOKData
-                MOV  CX,blueRook2X
-                MOV  DX,blueRook2y
-                mov  es,blueRook2X
-                mov  tempx,es
-                mov  es,BlueRook2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
+  drawLoop:            
+                       MOV  AL,[BX]
+                       INT  10h
+                       INC  CX
+                       INC  BX
+                       CMP  CX,BoardWidth
+                       JNE  drawLoop
+	
+                       MOV  CX ,0
+                       INC  DX
+                       CMP  DX , BoardHeight
+                       JNE  drawLoop
+  ;;---------------------highlighted Tile------------;;
+                       MOV  CX,HighlightedBlock1x
+                       MOV  DX,HighlightedBlock1Y
+                       mov  es,HighlightedBlock1x
+                       mov  tempx,es
+                       mov  es,HighlightedBlock1y
+                       mov  tempy,es
+                       add  tempx,30
+                       add  tempy,25
+                       MOV  AH,0ch
 	
   ; Drawing loop
-  drawLooPBR2:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent15
-                INT  10h
-  transparent15:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBR2
+  drawLooPHB1:         
+                       MOV  AL,13
+                       INT  10h
+                       INC  CX
+                       INC  BX
+                       CMP  CX,tempx
+                       JNE  drawLoopHB1
 	
-                MOV  CX , blueRook2X
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPBR2
-  ;;-------------------PRINTBLUEBISHOP2-------------------;;
-                CALL OpenFileBB
-                CALL ReadDataBB
-                LEA  BX ,BBISHOPData
-                MOV  CX,blueBishop2X
-                MOV  DX,blueBishop2y
-                mov  es,blueBishop2X
-                mov  tempx,es
-                mov  es,BlueBishop2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBB2:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent16
-                INT  10h
-  transparent16:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBB2
-	
-                MOV  CX , blueBishop2X
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPBB2
+                       MOV  CX , HighlightedBlock1x
+                       INC  DX
+                       CMP  DX , tempy
+                       JNE  drawLooPHB1
+;--------------------------------------------------------;
+                       CALL PRINTBLUEROOK1
+                       CALL PRINTbluePAWN1
+                       CALL PRINTORANGEPAWN1
+                       CALL PRINTORANGEROOK1
+                       CALL PRINTORANGEBISHOP1
+                       call PRINTORANGEBISHOP2
+                       CALL PRINTORANGEROOK2
+                       CALL PRINTORANGEQUEEN
+                       CALL PRINTORANGEKING
+                       CALL PRINTBLUEKnight2
+                       CALL PRINTBLUEKing
+                       CALL PRINTBLUEQUEEN
+                       CALL PRINTBLUEBISHOP1
+                       CALL PRINTORANGEKNIGHT1
+                       CALL PRINTORANGEKNIGHT2
+                       CALL PRINTBLUEROOK2
+                       CALL PRINTBLUEBISHOP2
+                       CALL PRINTBLUEKnight1
+                       CALL PRINTORANGEPAWN2
+                       CALL PRINTORANGEPAWN3
+                       CALL PRINTORANGEPAWN4
+                       CALL PRINTORANGEPAWN5
+                       CALL PRINTORANGEPAWN6
+                       CALL PRINTORANGEPAWN7
+                       CALL PRINTORANGEPAWN8
+                       CALL PRINTBLUEPAWN2
+                       CALL PRINTBLUEPAWN3
+                       CALL PRINTBLUEPAWN4
+                       CALL PRINTBLUEPAWN5
+                       CALL PRINTBLUEPAWN6
+                       CALL PRINTBLUEPAWN7
+                       CALL PRINTBLUEPAWN8
 
 
-
-  ;;-------------------PRINTBLUEKnight1-------------------;;
-                CALL OpenFileBKn
-                CALL ReadDataBKn
-                LEA  BX ,BKNIGHTData
-                MOV  CX,blueKnight1X
-                MOV  DX,blueKnight1y
-                mov  es,blueKnight1X
-                mov  tempx,es
-                mov  es,BlueKnight1Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPBKn1: 
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent17
-                INT  10h
-  transparent17:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopBKn1
-	
-                MOV  CX , blueKnight1X
-                INC  DX
-                CMP  DX , tempy
-                JNE  drawLooPBKn1
-
-
-  ;;---------------PRINT ORANGE PAWN2----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn2X
-                MOV  DX,orangePawn2y
-                
-                mov  es,orangePawn2X
-                mov  tempx,es
-                mov  es,orangePawn2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp2:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent18
-                INT  10h
-  transparent18:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp2
-	
-                MOV  CX , orangePawn2X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp2
-  ;;---------------PRINT ORANGE PAWN3----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn3X
-                MOV  DX,orangePawn3y
-                
-                mov  es,orangePawn3X
-                mov  tempx,es
-                mov  es,orangePawn3Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp3:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent19
-                INT  10h
-  transparent19:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp3
-	
-                MOV  CX , orangepawn3X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp3
-  ;;---------------PRINT ORANGE PAWN4----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn4X
-                MOV  DX,orangePawn4y
-                
-                mov  es,orangePawn4X
-                mov  tempx,es
-                mov  es,orangePawn4Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp4:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent20
-                INT  10h
-  transparent20:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp4
-	
-                MOV  CX , orangePawn4X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp4
-  ;;---------------PRINT ORANGE PAWN5----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn5X
-                MOV  DX,orangePawn5y
-                
-                mov  es,orangePawn5X
-                mov  tempx,es
-                mov  es,orangePawn5Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp5:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent21
-                INT  10h
-  transparent21:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLooPOp5
-	
-                MOV  CX , orangepawn5X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp5
-  ;;---------------PRINT ORANGE PAWN6----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn6X
-                MOV  DX,orangePawn6y
-                
-                mov  es,orangePawn6X
-                mov  tempx,es
-                mov  es,orangePawn6Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp6:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent22
-                INT  10h
-  transparent22:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp6
-	
-                MOV  CX , orangePawn6X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp6
-  ;;---------------PRINT ORANGE PAWN7----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn7X
-                MOV  DX,orangePawn7y
-                
-                mov  es,orangePawn7X
-                mov  tempx,es
-                mov  es,orangePawn7Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp7:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent23
-                INT  10h
-  transparent23:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp7
-	
-                MOV  CX , orangepawn7X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp7
-  ;;---------------PRINT ORANGE PAWN8----------------------;;
-
-                CALL OpenFileOP
-                CALL ReadDataOP
-                LEA  BX , OPAWNData
-                MOV  CX,orangePawn8X
-                MOV  DX,orangePawn8y
-                
-                mov  es,orangePawn8X
-                mov  tempx,es
-                mov  es,orangePawn8Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPOp8:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent24
-                INT  10h
-  transparent24:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopOp8
-	
-                MOV  CX , orangePawn8X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPOp8
-
-  ;;---------------PRINT BLUE PAWN2----------------------;;
-
-                CALL OpenFileBP
-                CALL ReadDataBP
-                LEA  BX , BPAWNData
-                MOV  CX,BLUEPawn2X
-                MOV  DX,bluePawn2y
-                
-                mov  es,bluePawn2X
-                mov  tempx,es
-                mov  es,bluePawn2Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp2:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent25
-                INT  10h
-  transparent25:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp2
-	
-                MOV  CX , bluePawn2X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp2
-  ;;---------------PRINT blue PAWN3----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn3X
-                MOV  DX,bluePawn3y
-                
-                mov  es,bluePawn3X
-                mov  tempx,es
-                mov  es,bluePawn3Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp3:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent26
-                INT  10h
-  transparent26:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp3
-	
-                MOV  CX , bluepawn3X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp3
-  ;;---------------PRINT blue PAWN4----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn4X
-                MOV  DX,bluePawn4y
-                
-                mov  es,bluePawn4X
-                mov  tempx,es
-                mov  es,bluePawn4Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp4:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent27
-                INT  10h
-  transparent27:  
-               
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp4
-	
-                MOV  CX , bluePawn4X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp4
-   ;;---------------PRINT blue PAWN5----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn5X
-                MOV  DX,bluePawn5y
-                
-                mov  es,bluePawn5X
-                mov  tempx,es
-                mov  es,bluePawn5Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp5:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent28
-                INT  10h
-  transparent28:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLooPbp5
-	
-                MOV  CX , bluepawn5X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp5
-  ;;---------------PRINT blue PAWN6----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn6X
-                MOV  DX,bluePawn6y
-                
-                mov  es,bluePawn6X
-                mov  tempx,es
-                mov  es,bluePawn6Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp6:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent29
-                INT  10h
-                transparent29:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp6
-	
-                MOV  CX , bluePawn6X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp6
-  ;;---------------PRINT blue PAWN7----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn7X
-                MOV  DX,bluePawn7y
-                
-                mov  es,bluePawn7X
-                mov  tempx,es
-                mov  es,bluePawn7Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp7:  
-                MOV  AL,[BX]
-                cmp  al,0fh
-                je   transparent30
-                INT  10h
-  transparent30:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp7
-	
-                MOV  CX , bluepawn7X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp7
-  ;;---------------PRINT blue PAWN8----------------------;;
-
-                CALL OpenFilebP
-                CALL ReadDatabP
-                LEA  BX , bPAWNData
-                MOV  CX,bluePawn8X
-                MOV  DX,bluePawn8y
-                
-                mov  es,bluePawn8X
-                mov  tempx,es
-                mov  es,bluePawn8Y
-                mov  tempy,es
-                add  tempx,30
-                add  tempy,25
-
-                MOV  AH,0ch
-	
-  ; Drawing loop
-  drawLooPbp8:  
-                MOV  AL,[BX]
-             cmp  al,0fh
-                je   transparent31
-                INT  10h
-  transparent31:
-                INC  CX
-                INC  BX
-                CMP  CX,tempx
-                JNE  drawLoopbp8
-	
-                MOV  CX , bluePawn8X
-                INC  DX
-                CMP  DX ,tempy
-                JNE  drawLooPbp8
     
- ;;------------------------------------------------------------;;
-                call moveHighlightedBlock
-                jmp  FOFA
-                
+  ;;------------------------------------------------------------;;
+                       call moveHighlightedBlock
+                       JMP LOOP1
                 
              	
   ; Press any key to exit
-                MOV  AH , 0
-                INT  16h
+                       MOV  AH , 0
+                       INT  16h
     
-                call CloseFileOR
+                       call CloseFileOR
     
   ;Change to Text MODE
-                MOV  AH,0
-                MOV  AL,03h
-                INT  10h
+                       MOV  AH,0
+                       MOV  AL,03h
+                       INT  10h
 
   ; return control to operating system
-                MOV  AH , 4ch
-                INT  21H
+                       MOV  AH , 4ch
+                       INT  21H
 
     
 DRAWBOARD ENDP
@@ -2031,12 +2243,9 @@ DRAWBOARD ENDP
 
 
 MAIN PROC FAR
-                MOV  AX , @DATA
-                MOV  DS , AX
-
-                CALL DRAWBOARD
-
-                
+                       MOV  AX , @DATA
+                       MOV  DS , AX
+                       CALL DRAWBOARD
 
 MAIN ENDP
 END MAIN
