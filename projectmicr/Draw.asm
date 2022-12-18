@@ -178,9 +178,12 @@
 
   bluePawn8X        DW  210D
   bluePawn8Y        DW  150D
+  donefirstmove db 0
   ;;------------------------------;;
   HighlightedBlock1x DW 00D
   HighlightedBlock1Y DW 00D
+  tempHBx dw 0
+  tempHBy dw 0
 
 ;;-----------------------------------;;
   tempx             DW  ?
@@ -642,7 +645,7 @@ jne comparebishop2
 cmp dx, orangeBishop1Y
 jne comparebishop2
 
-call orangeBishopLogic1
+;call orangeBishopLogic1
 ret
 
 comparebishop2: cmp bx,orangeBishop2X
@@ -651,7 +654,7 @@ jne notorangeBishop
 cmp dx, orangeBishop2Y
 jne notorangeBishop
 
-call orangeBishopLogic2
+;call orangeBishopLogic2
 ret
 
 notorangeBishop:
@@ -663,7 +666,7 @@ jne compareknight2
 cmp dx, orangeknight1Y
 jne compareknight2
 
-call orangeknightLogic1
+;call orangeknightLogic1
 ret
 
 compareknight2: cmp bx,orangeknight2X
@@ -672,7 +675,7 @@ jne notorangeknight
 cmp dx, orangeknight2Y
 jne notorangeknight
 
-call orangeknightLogic2
+;call orangeknightLogic2
 ret
 
 notorangeknight:
@@ -683,7 +686,7 @@ jne comparequeen2
 cmp dx, orangequeenY
 jne comparequeen2
 
-call orangequeenLogic
+;call orangequeenLogic
 ret
 
 comparequeen2: cmp bx,orangequeenX
@@ -692,7 +695,7 @@ jne notorangequeen
 cmp dx, orangequeenY
 jne notorangequeen
 
-call orangequeenLogic
+;call orangequeenLogic
 ret
 
 notorangequeen:
@@ -703,7 +706,7 @@ jne compareking2
 cmp dx, orangekingY
 jne compareking2
 
-call orangekingLogic
+;call orangekingLogic
 ret
 
 compareking2: cmp bx,orangekingX
@@ -712,7 +715,7 @@ jne notorangeking
 cmp dx, orangekingY
 jne notorangeking
 
-call orangekingLogic
+;call orangekingLogic
 ret
 
 notorangeking:
@@ -723,7 +726,7 @@ jne comparerook2
 cmp dx, orangerook1Y
 jne comparerook2
 
-call orangerookLogic1
+;call orangerookLogic1
 ret
 
 comparerook2: cmp bx,orangerook2X
@@ -732,7 +735,7 @@ jne notorangerook
 cmp dx, orangerook2Y
 jne notorangerook
 
-call orangerookLogic2
+;call orangerookLogic2
 ret
 
 notorangerook:cmp bx,orangePawn1X
@@ -741,7 +744,7 @@ jne comparePawn2
 cmp dx, orangePawn1Y
 jne comparepawn2
 
-call orangePawnLogic1
+;call orangePawnLogic1
 ret
 
 comparePawn2: cmp bx,orangePawn2X
@@ -750,7 +753,7 @@ jne comparePawn3
 cmp dx, orangeBishop2Y
 jne comparePawn3
 
-call orangePawnLogic2
+;call orangePawnLogic2
 ret
 
 comparePawn3: cmp bx,orangePawn3X
@@ -759,7 +762,7 @@ jne comparePawn4
 cmp dx, orangePawn3Y
 jne comparepawn4
 
-call orangePawnLogic3
+;call orangePawnLogic3
 ret
 
 comparePawn4: cmp bx,orangePawn4X
@@ -768,7 +771,7 @@ jne comparePawn5
 cmp dx, orangePawn4Y
 jne comparePawn5
 
-call orangePawnLogic4
+;call orangePawnLogic4
 ret
 
 comparePawn5: cmp bx,orangePawn5X
@@ -777,7 +780,7 @@ jne comparePawn6
 cmp dx, orangePawn5Y
 jne comparepawn6
 
-call orangePawnLogic5
+;call orangePawnLogic5
 ret
 
 comparePawn6: cmp bx,orangePawn6X
@@ -786,7 +789,7 @@ jne comparePawn7
 cmp dx, orangepawn6Y
 jne comparePawn7
 
-call orangePawnLogic6
+;call orangePawnLogic6
 ret
 comparePawn7: cmp bx,orangePawn7X
 jne comparePawn8
@@ -794,7 +797,7 @@ jne comparePawn8
 cmp dx, orangePawn7Y
 jne comparepawn8
 
-call orangePawnLogic7
+;call orangePawnLogic7
 ret
 
 comparePawn8: cmp bx,orangePawn8X
@@ -803,7 +806,7 @@ jne notorange
 cmp dx, orangepawn8Y
 jne notorange
 
-call orangePawnLogic8
+;call orangePawnLogic8
 ret
 notorange :
 ;;-----------------------------------------------------------;;
@@ -811,6 +814,43 @@ pop dx
 pop bx
 SELECTEDPIECE ENDP
 
+orangePawnLogic1 proc
+cmp donefirstmove,1
+je oneTile
+
+mov es, HighlightedBlock1Y
+
+mov tempHBy, es
+sub tempHBy,25
+
+;;call draw tile howw?????
+;;ithink hanehtag 2 blocks ashan yeb2a fe etnen pink
+
+oneTile: 
+
+mov tempHBy, es
+sub tempHBy,25
+
+orangePawnLogic1 endp
+
+orangekingLogic proc
+
+mov es,HighlightedBlock1x
+mov tempHBx,es
+add tempHBx,30
+sub tempHBx,30 ;;horizontal
+;;call draw
+mov es,HighlightedBlock1Y
+mov tempHBy, es
+sub tempHBy ,25
+add tempHBy,25 ;;vertical
+;;lesa diagonal
+
+orangekingLogic endp
+
+orangequeenLogic proc
+;;;karsaaa;;;;;;;;;;;;;;
+orangequeenlogic endp
 
 moveHighlightedBlock PROC
   AGAIN:
