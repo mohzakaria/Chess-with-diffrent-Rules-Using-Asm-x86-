@@ -1,0 +1,9 @@
+showmessage MACRO MyMessage
+               mov ah,2
+               mov dx,000eh
+               int 10h 
+                mov ah,9h
+                mov dx,offset MyMessage
+                int 21h 
+               
+ENDM showmessage

@@ -1,0 +1,9 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 06B90H 06B91H DRAW_TEXT          CODE
+ 06BA0H 150F3H 0E554H _DATA              DATA
+ 15100H 151FFH 00100H STACK              STACK
+
+Program entry point at 0000:6995
+
